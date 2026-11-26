@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UJI COBA TES KEMAMPUAN AKADEMIK (TKA) - UPT SD NEGERI SUGIHWARAS 1</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Font Arial Nova Cond fallback to Arial, sans-serif */
+        @font-face {
+            font-family: 'Arial Nova Cond';
+            src: local('Arial Nova Cond'), local('Arial-BoldMT'), local('Arial');
+        }
+
+        .font-header {
+            font-family: 'Arial Nova Cond', Arial, 'Helvetica Neue', sans-serif;
+            font-stretch: condensed;
+        }
+
+        .font-exam {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            font-size: 11pt; /* Standardized 11pt for questions */
+            line-height: 1.5;
+        }
+
+        .font-source {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            font-size: 8pt;
+            font-style: italic;
+        }
+
+        /* Target size custom styling */
+        .question-text p, .question-text div {
+            font-size: 11pt;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Prevent text selection during exam */
+        .unselectable {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+    <!-- ==================== PAGE 1: LOGIN / HALAMAN AWAL ==================== -->
+    <div id="page-login" class="flex-grow flex flex-col justify-between p-4 md:p-8">
+        <div class="max-w-xl mx-auto w-full bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden my-auto">
+            <!-- Header Banner -->
+            <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 p-6 text-white text-center relative">
+                <!-- Logo Container -->
+                <div class="flex justify-center mb-4 relative group">
+                    <div id="logo-preview-container" class="w-24 h-24 bg-white/10 backdrop-blur-md rounded-full p-2 border-2 border-white/30 shadow-inner flex items-center justify-center overflow-hidden">
+                        <!-- Placeholder Emblem Logo SVG -->
+                        <svg id="logo-svg" class="w-16 h-16 text-yellow-300 drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6"></path>
+                        </svg>
+                        <img id="logo-img" class="w-full h-full object-contain hidden" alt="Logo Sekolah">
+                    </div>
+                    <!-- Upload Custom Logo Option -->
+                    <label for="logo-upload" class="absolute bottom-0 right-1/2 translate-x-12 bg-white text-slate-700 p-1.5 rounded-full shadow-md hover:bg-slate-100 cursor-pointer text-xs flex items-center justify-center border border-slate-300" title="Ganti Logo Sekolah">
+                        <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                        <input type="file" id="logo-upload" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                    </label>
+                </div>
+
+                <!-- Judul Utama Rata Tengah -->
+                <h1 class="font-header text-2xl md:text-3xl font-bold tracking-wide uppercase leading-snug">
+                    UJI COBA TES KEMAMPUAN AKADEMIK (TKA)
+                </h1>
+                <h2 class="font-header text-lg md:text-xl font-semibold text-yellow-300 tracking-wider mt-1 uppercase">
+                    UPT SD NEGERI SUGIHWARAS 1
+                </h2>
+                <p class="font-header text-sm md:text-base font-medium text-blue-100 tracking-widest mt-1">
+                    TAHUN 2027
+                </p>
+            </div>
+
+            <!-- Form Identitas -->
+            <form id="form-login" onsubmit="handleLoginSubmit(event)" class="p-6 md:p-8 space-y-5">
+                <!-- Alert Error Token -->
+                <div id="token-error-alert" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-r-md">
+                    <div class="flex items-start">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5"></i>
+                        <p class="text-sm text-red-700 font-medium">
+                            Maaf, token yang Anda masukkan salah. Silakan ulangi Kembali.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Nama Lengkap Siswa</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="input-nama" required placeholder="Masukkan Nama Lengkap Anda" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition text-slate-800 font-medium">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">NISN</label>
+                    <div class="relative">
+                        <i data-lucide="credit-card" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="input-nisn" required pattern="[0-9]+" placeholder="Masukkan 10 Digit NISN" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition text-slate-800 font-medium">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Token Ujian</label>
+                    <div class="relative">
+                        <i data-lucide="key-round" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="input-token" required placeholder="Masukkan Token (Contoh: XC3HAQ)" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition uppercase font-mono tracking-wider text-slate-800 font-bold">
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Gunakan token resmi dari pengawas ujian.</p>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-blue-500/25 transition duration-200 flex items-center justify-center text-base mt-2">
+                    <span>Masuk / Lanjut</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer Copyright Right Bottom -->
+        <div class="text-right text-xs text-slate-500 font-medium py-3 pr-2">
+            Dibuat oleh: <span class="text-slate-700 font-semibold">Ridha Lancestia Wahyono</span>
+        </div>
+    </div>
+
+    <!-- ==================== POP-UP MODAL PETUNJUK ==================== -->
+    <div id="modal-petunjuk" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200">
+            <!-- Modal Header -->
+            <div class="bg-blue-50 border-b border-blue-100 p-5 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-600 text-white rounded-lg">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Konfirmasi Identitas & Petunjuk</h3>
+                        <p class="text-xs text-slate-500">Uji Coba TKA T.A 2027</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 space-y-5">
+                <!-- Info Peserta -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-1.5">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-500">Nama Peserta:</span>
+                        <span id="modal-display-nama" class="font-bold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-500">NISN:</span>
+                        <span id="modal-display-nisn" class="font-mono font-bold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-500">Sekolah:</span>
+                        <span class="font-semibold text-blue-700">UPT SD NEGERI SUGIHWARAS 1</span>
+                    </div>
+                </div>
+
+                <!-- Petunjuk Pengerjaan -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Petunjuk Pengerjaan Soal:</h4>
+                    <ol class="space-y-2 text-sm text-slate-700 list-decimal list-inside bg-amber-50/60 border border-amber-200/60 p-4 rounded-xl">
+                        <li class="leading-relaxed">
+                            Soal terdiri dari <strong>30 butir soal</strong> dengan waktu mengerjakan maksimal <strong>75 menit</strong>.
+                        </li>
+                        <li class="leading-relaxed">
+                            Periksa Kembali jawaban Anda. Pastikan Anda menjawab dengan benar.
+                        </li>
+                    </ol>
+                    <p class="text-sm font-bold text-blue-700 mt-3 text-center italic">Selamat mengerjakan!</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer Button -->
+            <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-end">
+                <button onclick="startExam()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2 text-sm md:text-base">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span>Saya Mengerti, Saya Siap Mengerjakan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2: HALAMAN UJIAN / SOAL ==================== -->
+    <div id="page-exam" class="hidden flex-grow flex flex-col unselectable">
+        <!-- Top App Bar -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-700 text-white rounded-lg">
+                        <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-sm font-bold text-slate-800 font-header uppercase">UJI COBA TKA 2027 - UPT SD NEGERI SUGIHWARAS 1</h1>
+                        <p id="exam-user-info" class="text-xs text-slate-500"></p>
+                    </div>
+                </div>
+
+                <!-- Timer & Navigation Toggle -->
+                <div class="flex items-center space-x-3">
+                    <!-- Countdown Timer -->
+                    <div class="flex items-center bg-amber-50 text-amber-800 border border-amber-300 px-3.5 py-1.5 rounded-lg text-sm font-mono font-bold shadow-sm">
+                        <i data-lucide="clock" class="w-4 h-4 mr-2 text-amber-600 animate-pulse"></i>
+                        <span id="timer-display">75:00</span>
+                    </div>
+
+                    <!-- Mobile Drawer Toggle -->
+                    <button onclick="toggleMobileNav()" class="md:hidden bg-slate-100 p-2 rounded-lg border border-slate-300 text-slate-700">
+                        <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-grow grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Side: Question Display Area -->
+            <section class="md:col-span-8 lg:col-span-9 bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col min-h-[500px]">
+                
+                <!-- Question Header Bar -->
+                <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span id="question-badge" class="bg-blue-600 text-white font-bold text-sm px-3 py-1 rounded-lg">
+                            Soal No. 1
+                        </span>
+                        <span id="question-type-badge" class="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-200 text-slate-700">
+                            Pilihan Ganda
+                        </span>
+                    </div>
+                    <div class="text-xs text-slate-400 font-medium">
+                        TKA Bahasa Indonesia & Keilmuan
+                    </div>
+                </div>
+
+                <!-- Question Body Area (Arial 11pt) -->
+                <div class="p-6 md:p-8 flex-grow space-y-6 font-exam">
+                    
+                    <!-- Stimulus Box (if any) -->
+                    <div id="stimulus-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-5 text-slate-800 space-y-3">
+                        <div id="stimulus-content" class="leading-relaxed"></div>
+                        <div id="stimulus-source" class="font-source text-slate-500 pt-2 border-t border-slate-200"></div>
+                    </div>
+
+                    <!-- Pokok Soal / Question Prompt -->
+                    <div id="question-prompt" class="font-bold text-slate-900 leading-normal">
+                        <!-- Text loaded dynamically -->
+                    </div>
+
+                    <!-- Petunjuk Khusus Soal (if any) -->
+                    <div id="question-instruction" class="hidden text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-2 rounded-lg">
+                        <!-- Dynamic instruction -->
+                    </div>
+
+                    <!-- Options Area -->
+                    <div id="options-container" class="space-y-3 pt-2">
+                        <!-- Options loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons -->
+                <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <button id="btn-prev" onclick="navigateQuestion(-1)" class="bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center text-xs md:text-sm">
+                        <i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>
+                        <span>Sebelumnya</span>
+                    </button>
+
+                    <div class="flex items-center space-x-2">
+                        <!-- Button Ragu-ragu -->
+                        <button id="btn-doubt" onclick="toggleDoubt()" class="border border-amber-400 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center text-xs md:text-sm">
+                            <i data-lucide="help-circle" class="w-4 h-4 mr-1.5 text-amber-600"></i>
+                            <span id="doubt-text">Ragu-ragu</span>
+                        </button>
+
+                        <!-- Button Next / Lewati -->
+                        <button id="btn-next" onclick="navigateQuestion(1)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition flex items-center text-xs md:text-sm">
+                            <span>Lewati / Selanjutnya</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                        </button>
+
+                        <!-- Button Selesai (Appears on last question) -->
+                        <button id="btn-finish" onclick="confirmFinishExam()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition flex items-center text-xs md:text-sm">
+                            <i data-lucide="check-check" class="w-4 h-4 mr-1.5"></i>
+                            <span>Selesai</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Question Navigation Drawer/Grid -->
+            <aside id="nav-drawer" class="md:col-span-4 lg:col-span-3 bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                        <i data-lucide="grid" class="w-4 h-4 mr-2 text-blue-600"></i>
+                        Navigasi Soal
+                    </h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-md font-medium">1 - 30</span>
+                </div>
+
+                <!-- Status Legend -->
+                <div class="grid grid-cols-2 gap-2 text-[11px] font-medium text-slate-600">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded-md bg-blue-600 border border-blue-700 inline-block"></span>
+                        <span>Aktif</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded-md bg-emerald-500 border border-emerald-600 inline-block"></span>
+                        <span>Sudah Dikerjakan</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded-md bg-amber-400 border border-amber-500 inline-block"></span>
+                        <span>Ragu-ragu</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded-md bg-slate-100 border border-slate-300 inline-block"></span>
+                        <span>Belum Dijawab</span>
+                    </div>
+                </div>
+
+                <!-- Grid of 30 Buttons -->
+                <div id="question-grid" class="grid grid-cols-5 gap-2 pt-2">
+                    <!-- Generated via JS -->
+                </div>
+
+                <!-- Final Submit Button in Grid Side -->
+                <div class="pt-4 border-t border-slate-100">
+                    <button onclick="confirmFinishExam()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span>Kumpulkan Ujian</span>
+                    </button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ==================== PAGE 3: HALAMAN HASIL / NILAI ==================== -->
+    <div id="page-result" class="hidden flex-grow flex items-center justify-center p-4 md:p-8">
+        <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto text-center">
+            
+            <!-- Result Header Banner -->
+            <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-8 text-white relative">
+                <div class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full mx-auto flex items-center justify-center mb-4 border-2 border-white/30 shadow-inner">
+                    <i data-lucide="trophy" class="w-10 h-10 text-yellow-300"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Selamat!</h2>
+                <p class="text-emerald-100 text-sm md:text-base mt-2 max-w-md mx-auto leading-relaxed">
+                    Anda telah menyelesaikan Uji Coba Tes Kemampuan Akademik (TKA). Nilai yang Anda dapatkan adalah
+                </p>
+            </div>
+
+            <!-- Big Score Display -->
+            <div class="p-8 space-y-6">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 max-w-xs mx-auto shadow-inner">
+                    <span class="text-xs uppercase font-bold tracking-widest text-slate-400 block mb-1">Skor Akhir TKA</span>
+                    <div id="result-score" class="text-5xl md:text-6xl font-black text-emerald-600 font-mono tracking-tight">
+                        0.00
+                    </div>
+                    <span class="text-xs text-slate-500 font-medium mt-1 block">Skala 0 - 100</span>
+                </div>
+
+                <!-- Details Recap Grid -->
+                <div class="grid grid-cols-3 gap-3 text-left max-w-md mx-auto">
+                    <div class="bg-blue-50 border border-blue-100 p-3 rounded-xl text-center">
+                        <span class="text-[11px] text-blue-600 font-bold uppercase block">Total Soal</span>
+                        <span class="text-xl font-bold text-slate-800">30</span>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-100 p-3 rounded-xl text-center">
+                        <span class="text-[11px] text-emerald-600 font-bold uppercase block">Benar</span>
+                        <span id="result-correct" class="text-xl font-bold text-emerald-700">0</span>
+                    </div>
+                    <div class="bg-red-50 border border-red-100 p-3 rounded-xl text-center">
+                        <span class="text-[11px] text-red-600 font-bold uppercase block">Salah / Kosong</span>
+                        <span id="result-wrong" class="text-xl font-bold text-red-700">0</span>
+                    </div>
+                </div>
+
+                <!-- Student Identity Info -->
+                <div class="bg-slate-100/80 p-4 rounded-xl text-xs text-slate-600 max-w-md mx-auto space-y-1 text-left border border-slate-200">
+                    <div class="flex justify-between">
+                        <span>Nama Peserta:</span>
+                        <strong id="result-nama" class="text-slate-800"></strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>NISN:</span>
+                        <strong id="result-nisn" class="text-slate-800 font-mono"></strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Satuan Pendidikan:</span>
+                        <strong class="text-slate-800">UPT SD NEGERI SUGIHWARAS 1</strong>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-4 flex flex-wrap justify-center gap-3">
+                    <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-xl text-sm transition flex items-center space-x-2">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Cetak Hasil</span>
+                    </button>
+                    <button onclick="restartApp()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl text-sm transition flex items-center space-x-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Halaman Utama</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Credit -->
+            <div class="bg-slate-50 border-t border-slate-100 py-3 text-xs text-slate-500 font-medium">
+                Dibuat oleh: <span class="text-slate-700 font-semibold">Ridha Lancestia Wahyono</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT APP LOGIC & SOAL ==================== -->
+    <script>
+        // --- DATA STATE ---
+        const CORRECT_TOKEN = "XC3HAQ";
+        let currentQuestionIndex = 0;
+        let timerInterval = null;
+        let timeRemaining = 75 * 60; // 75 Minutes in seconds
+        let studentData = { nama: '', nisn: '' };
+
+        // Answers state: array of 30 items
+        // For PG: string 'A', 'B', 'C', 'D'
+        // For MCMA: array of strings e.g. ['A', 'C']
+        // For Kategori: object e.g. { a: 'Benar', b: 'Benar', c: 'Salah' }
+        let userAnswers = Array(30).fill(null);
+        let doubtState = Array(30).fill(false);
+
+        // --- STIMULUS TEKS DESKRIPSI (GUNUNG LAWU) ---
+        const STIMULUS_LAWU = `
+            <p class="mb-2"><strong>Pesona dan Keajaiban Gunung Lawu</strong></p>
+            <p class="mb-2">Gunung Lawu berdiri megah di Pulau Jawa. Gunung ini berada di batas dua kabupaten. Ketinggian Gunung Lawu mencapai tiga ribu meter. Puncak paling tinggi bernama Puncak Hargo Dumilah. Puncak gunung selalu tertutup hamparan awan. Pemandangan matahari terbit sangat memukau di sana. Udara di puncak terasa membeku saat malam. Gunung Lawu memiliki tempat bersejarah berupa candi.</p>
+            <p class="mb-2">Banyak pendaki sangat mengagumi keindahan gunung ini. Jalur pendakian melintasi kawasan hutan pinus lebat. Udara bersih hutan terasa sangat menyegarkan paru-paru. Burung-burung liar bernyanyi merdu di atas pohon. Pendaki dapat menyaksikan keajaiban kawah vulkanik purba. Ada berbagai pilihan rute pendakian menuju puncak. Jalur Cemoro Sewu menjadi rute paling terkenal. Rute ini dilengkapi susunan ribuan tangga batu.</p>
+            <p>Setiap pengunjung harus menaati tata tertib pendakian. Pendaki wajib menjaga kebersihan lingkungan alam sekitar. Sampah sisa makanan harus dibawa turun kembali. Bunga edelweis di sepanjang jalur dilarang dipetik. Tumbuhan liar harus kita jaga bersama-sama. Menjaga kelestarian gunung adalah tugas seluruh pengunjung. Gunung Lawu menyajikan petualangan alam yang menakjubkan.</p>
+        `;
+        const SOURCE_LAWU = 'Sumber: Disadur dari <a href="https://www.indonesia.travel/id/id/destination/java/central-java/gunung-lawu" target="_blank" class="text-blue-600 hover:underline">https://www.indonesia.travel/id/id</a>';
+
+        // --- DATABASE 30 SOAL TKA SD KELAS 6 ---
+        const questions = [
+            // SOAL 1: PG (Sesuai Soal No 1 Gunung Lawu)
+            {
+                id: 1,
+                type: 'PG',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Kelompok kata berikut yang semuanya merupakan kosakata khusus dalam bidang pariwisata pada teks di atas adalah ....',
+                options: [
+                    { id: 'A', text: 'candi, kawah, edelweis, dan tumbuhan' },
+                    { id: 'B', text: 'gunung, awan, kawah, dan kebersihan' },
+                    { id: 'C', text: 'rute, pendaki, jalur, dan pengunjung' },
+                    { id: 'D', text: 'puncak, udara, sampah, dan petualangan' }
+                ],
+                key: 'C'
+            },
+            // SOAL 2: MCMA (Sesuai Soal No 2 Gunung Lawu)
+            {
+                id: 2,
+                type: 'MCMA',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Berdasarkan paragraf kedua, manakah informasi tersurat yang sesuai dengan isi teks?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar di antara pilihan yang tersedia!',
+                options: [
+                    { id: 'A', text: 'Jalur Cemoro Sewu dilengkapi dengan susunan ribuan tangga batu.' },
+                    { id: 'B', text: 'Udara malam hari di sepanjang rute pendakian terasa sangat membeku.' },
+                    { id: 'C', text: 'Pendaki dapat melihat kawah vulkanik purba saat melintasi rute pendakian.' }
+                ],
+                key: ['A', 'C']
+            },
+            // SOAL 3: KATEGORI (Sesuai Soal No 3 Gunung Lawu)
+            {
+                id: 3,
+                type: 'KATEGORI',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Tentukan kebenaran amanat yang dapat disimpulkan dari teks deskripsi di atas!',
+                statements: [
+                    { id: 'a', text: 'Pengunjung hendaknya selalu mematuhi tata tertib dengan tidak membuang sampah makanan sembarangan di gunung.' },
+                    { id: 'b', text: 'Kita harus menjaga kelestarian flora langka seperti bunga edelweis dengan cara tidak memetiknya di sepanjang jalur.' },
+                    { id: 'c', text: 'Pendaki disarankan hanya memilih jalur Cemoro Sewu karena rute lain tidak memiliki keindahan alam yang menakjubkan.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 4: PG - Ide Pokok Paragraf 1
+            {
+                id: 4,
+                type: 'PG',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Ide pokok yang terkandung dalam paragraf pertama pada teks deskripsi di atas adalah ....',
+                options: [
+                    { id: 'A', text: 'Letak geografis dan keindahan fisik Gunung Lawu' },
+                    { id: 'B', text: 'Tata tertib utama yang harus ditaati pendaki' },
+                    { id: 'C', text: 'Keanekaragaman hayati pohon pinus di hutan' },
+                    { id: 'D', text: 'Sejarah pembuatan candi purba di Pulau Jawa' }
+                ],
+                key: 'A'
+            },
+            // SOAL 5: MCMA - Karakteristik Jalur Pendakian
+            {
+                id: 5,
+                type: 'MCMA',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Manakah daya tarik alam yang dapat dijumpai oleh para pendaki berdasarkan teks tersebut?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Kawasan hutan pinus lebat dengan udara yang segar.' },
+                    { id: 'B', text: 'Hamparan awan dan pemandangan indah matahari terbit.' },
+                    { id: 'C', text: 'Danau air tawar yang membeku pada malam hari.' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 6: KATEGORI - Nilai-Nilai Teks
+            {
+                id: 6,
+                type: 'KATEGORI',
+                stimulus: STIMULUS_LAWU,
+                source: SOURCE_LAWU,
+                prompt: 'Tentukan kebenaran pernyataan terkait nilai-nilai dalam teks deskripsi tersebut!',
+                statements: [
+                    { id: 'a', text: 'Teks mengandung nilai lingkungan yaitu kewajiban menjaga kelestarian alam dan kebersihan.' },
+                    { id: 'b', text: 'Teks memuat nilai budaya melalui keberadaan tempat bersejarah berupa candi.' },
+                    { id: 'c', text: 'Teks memuat nilai ekonomi mengenai tarif tiket masuk ke Puncak Hargo Dumilah.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 7: PG - Kebahasaan Kata Khusus Biologi
+            {
+                id: 7,
+                type: 'PG',
+                prompt: 'Di antara kata-kata berikut, manakah yang merupakan kosakata khusus dalam bidang biologi/ekologi?',
+                options: [
+                    { id: 'A', text: 'Fotosintesis, ekosistem, dan vegetasi' },
+                    { id: 'B', text: 'Investasi, inflasi, dan devisa negara' },
+                    { id: 'C', text: 'Arsitektur, fondasi, dan drainase' },
+                    { id: 'D', text: 'Demokrasi, konstitusi, dan regulasi' }
+                ],
+                key: 'A'
+            },
+            // SOAL 8: MCMA - Matematika Dasar SD
+            {
+                id: 8,
+                type: 'MCMA',
+                prompt: 'Perhatikan bilangan pecahan berikut: 1/2, 0.75, 4/5. Pernyataan manakah yang bernilai benar?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Pecahan 0.75 nilainya lebih besar daripada 1/2.' },
+                    { id: 'B', text: 'Pecahan 4/5 jika diubah ke desimal menjadi 0.80.' },
+                    { id: 'C', text: 'Pecahan 1/2 nilainya setara dengan 75 persen.' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 9: KATEGORI - IPA Ekosistem
+            {
+                id: 9,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran pernyataan mengenai peran makhluk hidup dalam rantai makanan berikut!',
+                statements: [
+                    { id: 'a', text: 'Tumbuhan hijau berperan sebagai produsen karena dapat membuat makanan sendiri.' },
+                    { id: 'b', text: 'Kelinci dan belalang tergolong sebagai konsumen tingkat pertama (herbitora).' },
+                    { id: 'c', text: 'Bakteri dan jamur berperan sebagai konsumen tingkat puncak dalam ekosistem.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 10: PG - Bahasa Indonesia Sinonim
+            {
+                id: 10,
+                type: 'PG',
+                prompt: 'Kata "memukau" pada kalimat "Pemandangan matahari terbit sangat memukau di sana" memiliki sinonim dengan kata ....',
+                options: [
+                    { id: 'A', text: 'Menakjubkan' },
+                    { id: 'B', text: 'Mengerikan' },
+                    { id: 'C', text: 'Membosankan' },
+                    { id: 'D', text: 'Menyulitkan' }
+                ],
+                key: 'A'
+            },
+            // SOAL 11: MCMA - IPS Kenampakan Alam
+            {
+                id: 11,
+                type: 'MCMA',
+                prompt: 'Manakah dari kenampakan alam berikut yang termasuk dalam wilayah daratan?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Dataran tinggi dan lembah gunung' },
+                    { id: 'B', text: 'Semenanjung dan bukit pegunungan' },
+                    { id: 'C', text: 'Selat laut dan teluk pantai' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 12: KATEGORI - PPKn Hak & Kewajiban
+            {
+                id: 12,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran contoh pelaksanaan kewajiban sebagai warga sekolah!',
+                statements: [
+                    { id: 'a', text: 'Menjaga kebersihan dan merawat fasilitas kelas secara rutin.' },
+                    { id: 'b', text: 'Mendapatkan bimbingan dan pelajaran dari guru pengajar.' },
+                    { id: 'c', text: 'Mengenakan seragam sekolah sesuai tata tertib yang berlaku.' }
+                ],
+                key: { a: 'Benar', b: 'Salah', c: 'Benar' }
+            },
+            // SOAL 13: PG - Matematika KPK & FPB
+            {
+                id: 13,
+                type: 'PG',
+                prompt: 'Kelipatan Persekutuan Terkecil (KPK) dari bilangan 12 dan 18 adalah ....',
+                options: [
+                    { id: 'A', text: '36' },
+                    { id: 'B', text: '24' },
+                    { id: 'C', text: '48' },
+                    { id: 'D', text: '72' }
+                ],
+                key: 'A'
+            },
+            // SOAL 14: MCMA - IPA Wujud Benda
+            {
+                id: 14,
+                type: 'MCMA',
+                prompt: 'Manakah peristiwa perubahan wujud benda yang membutuhkan kalor (menerima panas)?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Es batu yang mencair menjadi air' },
+                    { id: 'B', text: 'Air yang menguap saat mendidih' },
+                    { id: 'C', text: 'Uap air yang mengembun di gelas' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 15: KATEGORI - B. Indo Kalimat Tunggal
+            {
+                id: 15,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran apakah kalimat berikut merupakan contoh kalimat tunggal!',
+                statements: [
+                    { id: 'a', text: '"Pendaki berjalan melintasi hutan pinus." (Kalimat Tunggal)' },
+                    { id: 'b', text: '"Gunung Lawu sangat tinggi dan bersuhu dingin." (Kalimat Tunggal)' },
+                    { id: 'c', text: '"Siswa membaca buku di perpustakaan." (Kalimat Tunggal)' }
+                ],
+                key: { a: 'Benar', b: 'Salah', c: 'Benar' }
+            },
+            // SOAL 16: PG - IPA Tata Surya
+            {
+                id: 16,
+                type: 'PG',
+                prompt: 'Planet terbesar dalam sistem tata surya kita yang dikenal memiliki bintik merah raksasa adalah ....',
+                options: [
+                    { id: 'A', text: 'Jupiter' },
+                    { id: 'B', text: 'Saturnus' },
+                    { id: 'C', text: 'Mars' },
+                    { id: 'D', text: 'Neptunus' }
+                ],
+                key: 'A'
+            },
+            // SOAL 17: MCMA - IPS Pahlawan Nasional
+            {
+                id: 17,
+                type: 'MCMA',
+                prompt: 'Manakah di antara pahlawan berikut yang berjuang memimpin perlawanan terhadap penjajah di wilayah Jawa?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Pangeran Diponegoro' },
+                    { id: 'B', text: 'Jenderal Soedirman' },
+                    { id: 'C', text: 'Pattimura' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 18: KATEGORI - Matematika Geometri
+            {
+                id: 18,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran sifat-sifat bangun datar persegi berikut!',
+                statements: [
+                    { id: 'a', text: 'Memiliki empat sisi yang sama panjang.' },
+                    { id: 'b', text: 'Memiliki empat sudut siku-siku sebesar 90 derajat.' },
+                    { id: 'c', text: 'Memiliki hanya satu simetri lipat saja.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 19: PG - B. Indo Ejaan Baku
+            {
+                id: 19,
+                type: 'PG',
+                prompt: 'Penulisan kata baku yang tepat menurut Pedoman Umum Ejaan Bahasa Indonesia adalah ....',
+                options: [
+                    { id: 'A', text: 'Aktivitas, kualitas, dan obyek' },
+                    { id: 'B', text: 'Aktipitas, kwalitas, dan objek' },
+                    { id: 'C', text: 'Aktivitas, kualitas, dan objek' },
+                    { id: 'D', text: 'Aktifitas, kualitas, dan objek' }
+                ],
+                key: 'C'
+            },
+            // SOAL 20: MCMA - IPA Gaya & Gerak
+            {
+                id: 20,
+                type: 'MCMA',
+                prompt: 'Manakah kegiatan berikut yang memanfaatkan gaya gesek dalam kehidupan sehari-hari?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Penggunaan rem pada kendaraan sepeda' },
+                    { id: 'B', text: 'Sol sepatu berulir agar tidak tergelincir' },
+                    { id: 'C', text: 'Buah kelapa jatuh dari pohon ke bumi' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 21: KATEGORI - IPS Koperasi
+            {
+                id: 21,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran pernyataan mengenai landasan dan tujuan koperasi di Indonesia!',
+                statements: [
+                    { id: 'a', text: 'Koperasi berlandaskan asas kekeluargaan dan gotong royong.' },
+                    { id: 'b', text: 'Bapak Koperasi Indonesia adalah Drs. Mohammad Hatta.' },
+                    { id: 'c', text: 'Tujuan utama koperasi adalah mencari keuntungan sebesar-besarnya bagi pemilik modal.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 22: PG - B. Indo Pantun
+            {
+                id: 22,
+                type: 'PG',
+                prompt: 'Ciri utama dari puisi lama berupa pantun adalah memiliki rima berakhiran ....',
+                options: [
+                    { id: 'A', text: 'a-b-a-b' },
+                    { id: 'B', text: 'a-a-a-a' },
+                    { id: 'C', text: 'a-a-b-b' },
+                    { id: 'D', text: 'a-b-b-a' }
+                ],
+                key: 'A'
+            },
+            // SOAL 23: MCMA - IPA Organ Pernapasan
+            {
+                id: 23,
+                type: 'MCMA',
+                prompt: 'Manakah alat pernapasan hewan berikut yang sesuai dengan jenis habitatnya?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Ikan bernapas menggunakan insang' },
+                    { id: 'B', text: 'Cacing tanah bernapas menggunakan kulit basah' },
+                    { id: 'C', text: 'Belalang bernapas menggunakan paru-paru buku' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 24: KATEGORI - PPKn Pancasila
+            {
+                id: 24,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran pasangan lambang dan sila Pancasila berikut!',
+                statements: [
+                    { id: 'a', text: 'Sila ke-1 dilambangkan dengan Bintang Segi Lima.' },
+                    { id: 'b', text: 'Sila ke-3 dilambangkan dengan Kepala Banteng.' },
+                    { id: 'c', text: 'Sila ke-5 dilambangkan dengan Padi dan Kapas.' }
+                ],
+                key: { a: 'Benar', b: 'Salah', c: 'Benar' }
+            },
+            // SOAL 25: PG - Matematika Pengukuran
+            {
+                id: 25,
+                type: 'PG',
+                prompt: 'Hasil dari perbandingan 2.5 kilometer jika diubah ke dalam satuan meter adalah ....',
+                options: [
+                    { id: 'A', text: '2.500 meter' },
+                    { id: 'B', text: '250 meter' },
+                    { id: 'C', text: '25.000 meter' },
+                    { id: 'D', text: '25 meter' }
+                ],
+                key: 'A'
+            },
+            // SOAL 26: MCMA - SBdP Seni Tari
+            {
+                id: 26,
+                type: 'MCMA',
+                prompt: 'Manakah pasangan tari tradisional dan asal daerahnya yang tepat?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Tari Saman berasal dari daerah Aceh' },
+                    { id: 'B', text: 'Tari Pendet berasal dari daerah Bali' },
+                    { id: 'C', text: 'Tari Piring berasal dari daerah Papua' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 27: KATEGORI - IPA Hemat Energi
+            {
+                id: 27,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran perilaku penghematan energi listrik sehari-hari!',
+                statements: [
+                    { id: 'a', text: 'Mematikan lampu kamar saat siang hari yang cerah.' },
+                    { id: 'b', text: 'Mencabut steker alat elektronik setelah selesai digunakan.' },
+                    { id: 'c', text: 'Biarkan televisi tetap menyala saat tidur malam hari.' }
+                ],
+                key: { a: 'Benar', b: 'Benar', c: 'Salah' }
+            },
+            // SOAL 28: PG - B. Indo Antonim
+            {
+                id: 28,
+                type: 'PG',
+                prompt: 'Lawan kata (antonim) dari kata "kelestarian" dalam konteks menjaga lingkungan adalah ....',
+                options: [
+                    { id: 'A', text: 'Kerusakan' },
+                    { id: 'B', text: 'Keindahan' },
+                    { id: 'C', text: 'Keasrian' },
+                    { id: 'D', text: 'Keberlanjutan' }
+                ],
+                key: 'A'
+            },
+            // SOAL 29: MCMA - IPS Ekspor Impor
+            {
+                id: 29,
+                type: 'MCMA',
+                prompt: 'Manakah komoditas hasil perkebunan utama Indonesia yang diekspor ke luar negeri?',
+                instruction: 'Pilihlah 2 (dua) jawaban benar!',
+                options: [
+                    { id: 'A', text: 'Kelapa sawit dan produk olahannya' },
+                    { id: 'B', text: 'Kopi dan rempah-rempah pilihan' },
+                    { id: 'C', text: 'Gandum mentah hasil panen lokal' }
+                ],
+                key: ['A', 'B']
+            },
+            // SOAL 30: KATEGORI - Bahasa Indonesia TKA Akhir
+            {
+                id: 30,
+                type: 'KATEGORI',
+                prompt: 'Tentukan kebenaran mengenai unsur-unsur intrinsik dalam sebuah teks cerita!',
+                statements: [
+                    { id: 'a', text: 'Tokoh adalah pelaku yang mengalami peristiwa dalam cerita.' },
+                    { id: 'b', text: 'Latar tempat menceritakan kapan peristiwa itu terjadi.' },
+                    { id: 'c', text: 'Amanat merupakan pesan kebaikan yang dapat dipetik pembaca.' }
+                ],
+                key: { a: 'Benar', b: 'Salah', c: 'Benar' }
+            }
+        ];
+
+        // --- INITIALIZATION ON LOAD ---
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            buildQuestionGrid();
+        });
+
+        // --- HANDLE LOGO UPLOAD ---
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('logo-img');
+                    const svg = document.getElementById('logo-svg');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    svg.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- LOGIN & TOKEN VALIDATION ---
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const nama = document.getElementById('input-nama').value.trim();
+            const nisn = document.getElementById('input-nisn').value.trim();
+            const token = document.getElementById('input-token').value.trim().toUpperCase();
+            const alertError = document.getElementById('token-error-alert');
+
+            if (token !== CORRECT_TOKEN) {
+                alertError.classList.remove('hidden');
+                document.getElementById('input-token').focus();
+                return;
+            }
+
+            alertError.classList.add('hidden');
+            studentData.nama = nama;
+            studentData.nisn = nisn;
+
+            // Show Confirmation Modal
+            document.getElementById('modal-display-nama').textContent = nama;
+            document.getElementById('modal-display-nisn').textContent = nisn;
+            document.getElementById('modal-petunjuk').classList.remove('hidden');
+        }
+
+        // --- START EXAM ---
+        function startExam() {
+            document.getElementById('modal-petunjuk').classList.add('hidden');
+            document.getElementById('page-login').classList.add('hidden');
+            document.getElementById('page-exam').classList.remove('hidden');
+
+            document.getElementById('exam-user-info').textContent = `${studentData.nama} | NISN: ${studentData.nisn}`;
+
+            // Initialize Exam State
+            currentQuestionIndex = 0;
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- TIMER LOGIC (75 MINUTES) ---
+        function startTimer() {
+            const display = document.getElementById('timer-display');
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu pengerjaan telah habis! Sistem akan mengumpulkan jawaban Anda otomatis.");
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = document.getElementById('timer-display');
+            display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeRemaining < 300) { // Under 5 mins warning
+                display.parentElement.classList.remove('bg-amber-50', 'text-amber-800', 'border-amber-300');
+                display.parentElement.classList.add('bg-red-100', 'text-red-700', 'border-red-300', 'animate-pulse');
+            }
+        }
+
+        // --- BUILD NAV GRID (1-30) ---
+        function buildQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `nav-btn-${idx}`;
+                btn.className = `w-full aspect-square rounded-xl font-bold text-xs flex items-center justify-center transition border ${getNavBtnStyle(idx)}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function getNavBtnStyle(index) {
+            const isCurrent = index === currentQuestionIndex;
+            const isDoubt = doubtState[index];
+            const hasAnswer = isAnswered(index);
+
+            if (isCurrent) {
+                return 'bg-blue-600 text-white border-blue-700 ring-2 ring-blue-400/50 shadow-md scale-105 z-10';
+            }
+            if (isDoubt) {
+                return 'bg-amber-400 text-slate-900 border-amber-500 hover:bg-amber-500 font-black';
+            }
+            if (hasAnswer) {
+                return 'bg-emerald-500 text-white border-emerald-600 hover:bg-emerald-600';
+            }
+            return 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200';
+        }
+
+        function isAnswered(index) {
+            const ans = userAnswers[index];
+            const q = questions[index];
+            if (!ans) return false;
+
+            if (q.type === 'PG') {
+                return true;
+            } else if (q.type === 'MCMA') {
+                return Array.isArray(ans) && ans.length > 0;
+            } else if (q.type === 'KATEGORI') {
+                // Must have chosen for all 3 statements
+                return ans.a && ans.b && ans.c;
+            }
+            return false;
+        }
+
+        function updateGridUI() {
+            questions.forEach((_, idx) => {
+                const btn = document.getElementById(`nav-btn-${idx}`);
+                if (btn) {
+                    btn.className = `w-full aspect-square rounded-xl font-bold text-xs flex items-center justify-center transition border ${getNavBtnStyle(idx)}`;
+                }
+            });
+        }
+
+        // --- RENDER QUESTION ---
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const q = questions[index];
+
+            // Update Badge & Type
+            document.getElementById('question-badge').textContent = `Soal No. ${index + 1}`;
+            
+            const typeLabel = q.type === 'PG' ? 'Pilihan Ganda' : (q.type === 'MCMA' ? 'Pilihan Ganda Kompleks (MCMA)' : 'Pilihan Kategori (Benar/Salah)');
+            document.getElementById('question-type-badge').textContent = typeLabel;
+
+            // Stimulus
+            const stimBox = document.getElementById('stimulus-container');
+            const stimContent = document.getElementById('stimulus-content');
+            const stimSource = document.getElementById('stimulus-source');
+
+            if (q.stimulus) {
+                stimContent.innerHTML = q.stimulus;
+                stimSource.innerHTML = q.source || '';
+                stimBox.classList.remove('hidden');
+            } else {
+                stimBox.classList.add('hidden');
+            }
+
+            // Prompt & Instruction
+            document.getElementById('question-prompt').innerHTML = q.prompt;
+            
+            const instBox = document.getElementById('question-instruction');
+            if (q.instruction) {
+                instBox.textContent = q.instruction;
+                instBox.classList.remove('hidden');
+            } else {
+                instBox.classList.add('hidden');
+            }
+
+            // Render Options
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            if (q.type === 'PG') {
+                renderPGOptions(q, optContainer);
+            } else if (q.type === 'MCMA') {
+                renderMCMAOptions(q, optContainer);
+            } else if (q.type === 'KATEGORI') {
+                renderKategoriOptions(q, optContainer);
+            }
+
+            // Update Navigation Buttons
+            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+            
+            const btnNext = document.getElementById('btn-next');
+            const btnFinish = document.getElementById('btn-finish');
+            if (index === questions.length - 1) {
+                btnNext.classList.add('hidden');
+                btnFinish.classList.remove('hidden');
+            } else {
+                btnNext.classList.remove('hidden');
+                btnFinish.classList.add('hidden');
+            }
+
+            // Update Doubt Button Style
+            const btnDoubt = document.getElementById('btn-doubt');
+            if (doubtState[index]) {
+                btnDoubt.className = "border border-amber-500 bg-amber-400 text-slate-900 font-bold px-4 py-2.5 rounded-xl shadow-md transition flex items-center text-xs md:text-sm";
+                document.getElementById('doubt-text').textContent = "Ragu-ragu (Aktif)";
+            } else {
+                btnDoubt.className = "border border-amber-400 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center text-xs md:text-sm";
+                document.getElementById('doubt-text').textContent = "Ragu-ragu";
+            }
+
+            updateGridUI();
+            lucide.createIcons();
+        }
+
+        // --- RENDER TYPE: PG (4 Options, Circle A/B/C/D) ---
+        function renderPGOptions(q, container) {
+            const currentAns = userAnswers[currentQuestionIndex];
+
+            q.options.forEach(opt => {
+                const isSelected = currentAns === opt.id;
+                const div = document.createElement('div');
+                div.onclick = () => selectPGAnswer(opt.id);
+                div.className = `p-4 rounded-xl border-2 transition cursor-pointer flex items-center space-x-3.5 ${
+                    isSelected 
+                    ? 'bg-blue-50/80 border-blue-600 shadow-sm text-blue-900 font-semibold' 
+                    : 'bg-white border-slate-200 hover:border-blue-300 hover:bg-slate-50 text-slate-800'
+                }`;
+
+                div.innerHTML = `
+                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm flex-shrink-0 transition ${
+                        isSelected 
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
+                        : 'border-slate-300 text-slate-600 bg-slate-100'
+                    }">
+                        ${opt.id}
+                    </div>
+                    <div class="text-sm font-exam leading-relaxed">${opt.text}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function selectPGAnswer(optId) {
+            userAnswers[currentQuestionIndex] = optId;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        // --- RENDER TYPE: MCMA (Multiple Choice Multiple Answer, Square Checkboxes) ---
+        function renderMCMAOptions(q, container) {
+            let currentAns = userAnswers[currentQuestionIndex] || [];
+
+            q.options.forEach(opt => {
+                const isSelected = currentAns.includes(opt.id);
+                const div = document.createElement('div');
+                div.onclick = () => toggleMCMAAnswer(opt.id);
+                div.className = `p-4 rounded-xl border-2 transition cursor-pointer flex items-center space-x-3.5 ${
+                    isSelected 
+                    ? 'bg-indigo-50/80 border-indigo-600 shadow-sm text-indigo-950 font-semibold' 
+                    : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-slate-50 text-slate-800'
+                }`;
+
+                div.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg border-2 flex items-center justify-center font-bold text-sm flex-shrink-0 transition ${
+                        isSelected 
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
+                        : 'border-slate-300 bg-slate-100'
+                    }">
+                        ${isSelected ? '<i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>' : ''}
+                    </div>
+                    <div class="text-sm font-exam leading-relaxed">${opt.text}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleMCMAAnswer(optId) {
+            let currentAns = userAnswers[currentQuestionIndex] || [];
+            if (!Array.isArray(currentAns)) currentAns = [];
+
+            if (currentAns.includes(optId)) {
+                currentAns = currentAns.filter(id => id !== optId);
+            } else {
+                currentAns.push(optId);
+            }
+
+            userAnswers[currentQuestionIndex] = currentAns;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        // --- RENDER TYPE: KATEGORI (Benar / Salah Table) ---
+        function renderKategoriOptions(q, container) {
+            let currentAns = userAnswers[currentQuestionIndex] || {};
+
+            const tableWrapper = document.createElement('div');
+            tableWrapper.className = "overflow-x-auto rounded-xl border border-slate-200 shadow-sm bg-white";
+
+            let tableHtml = `
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 border-b border-slate-200 text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            <th class="p-3.5 md:p-4 w-2/3">Pernyataan</th>
+                            <th class="p-3.5 md:p-4 text-center w-1/6 border-l border-slate-200">Benar</th>
+                            <th class="p-3.5 md:p-4 text-center w-1/6 border-l border-slate-200">Salah</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-sm font-exam">
+            `;
+
+            q.statements.forEach((stmt) => {
+                const val = currentAns[stmt.id]; // 'Benar' or 'Salah'
+                const isBenar = val === 'Benar';
+                const isSalah = val === 'Salah';
+
+                tableHtml += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="p-3.5 md:p-4 text-slate-800 leading-relaxed">${stmt.text}</td>
+                        <td onclick="selectKategori('${stmt.id}', 'Benar')" class="p-3.5 md:p-4 text-center border-l border-slate-200 cursor-pointer hover:bg-emerald-50/50">
+                            <div class="inline-flex items-center justify-center w-7 h-7 rounded-lg border-2 transition ${
+                                isBenar ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'border-slate-300 bg-slate-50'
+                            }">
+                                ${isBenar ? '<i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>' : ''}
+                            </div>
+                        </td>
+                        <td onclick="selectKategori('${stmt.id}', 'Salah')" class="p-3.5 md:p-4 text-center border-l border-slate-200 cursor-pointer hover:bg-red-50/50">
+                            <div class="inline-flex items-center justify-center w-7 h-7 rounded-lg border-2 transition ${
+                                isSalah ? 'bg-red-600 text-white border-red-600 shadow-sm' : 'border-slate-300 bg-slate-50'
+                            }">
+                                ${isSalah ? '<i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>' : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `</tbody></table>`;
+            tableWrapper.innerHTML = tableHtml;
+            container.appendChild(tableWrapper);
+        }
+
+        function selectKategori(stmtId, value) {
+            let currentAns = userAnswers[currentQuestionIndex] || {};
+            currentAns = { ...currentAns, [stmtId]: value };
+            userAnswers[currentQuestionIndex] = currentAns;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        // --- NAVIGATION CONTROLS ---
+        function navigateQuestion(direction) {
+            const target = currentQuestionIndex + direction;
+            if (target >= 0 && target < questions.length) {
+                loadQuestion(target);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function jumpToQuestion(index) {
+            loadQuestion(index);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleDoubt() {
+            doubtState[currentQuestionIndex] = !doubtState[currentQuestionIndex];
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function toggleMobileNav() {
+            const drawer = document.getElementById('nav-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // --- FINISH EXAM & CALCULATION ---
+        function confirmFinishExam() {
+            const unansweredCount = questions.reduce((acc, _, idx) => acc + (isAnswered(idx) ? 0 : 1), 0);
+            let msg = "Apakah Anda yakin ingin mengumpulkan ujian ini?";
+            if (unansweredCount > 0) {
+                msg = `Masih ada ${unansweredCount} soal yang belum Anda dijawab. Yakin ingin mengumpulkan sekarang?`;
+            }
+
+            if (confirm(msg)) {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+
+                if (!userAns) return;
+
+                if (q.type === 'PG') {
+                    if (userAns === q.key) {
+                        correctCount++;
+                    }
+                } else if (q.type === 'MCMA') {
+                    // Must match exact array of keys
+                    if (Array.isArray(userAns) && Array.isArray(q.key)) {
+                        const sortedUser = [...userAns].sort();
+                        const sortedKey = [...q.key].sort();
+                        if (JSON.stringify(sortedUser) === JSON.stringify(sortedKey)) {
+                            correctCount++;
+                        }
+                    }
+                } else if (q.type === 'KATEGORI') {
+                    // Rule: All 3 statements must be correct for 1 point. If any wrong = 0.
+                    let allCorrect = true;
+                    for (let key in q.key) {
+                        if (userAns[key] !== q.key[key]) {
+                            allCorrect = false;
+                            break;
+                        }
+                    }
+                    if (allCorrect) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            // Score formula: (Jumlah Benar / 30) * 100 with 2 decimal places
+            const finalScore = ((correctCount / 30) * 100).toFixed(2);
+
+            // Display Results
+            document.getElementById('result-score').textContent = finalScore;
+            document.getElementById('result-correct').textContent = correctCount;
+            document.getElementById('result-wrong').textContent = 30 - correctCount;
+            document.getElementById('result-nama').textContent = studentData.nama;
+            document.getElementById('result-nisn').textContent = studentData.nisn;
+
+            // Switch to Result Page
+            document.getElementById('page-exam').classList.add('hidden');
+            document.getElementById('page-result').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartApp() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
